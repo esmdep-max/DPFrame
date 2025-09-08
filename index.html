@@ -11,7 +11,7 @@
     .container{width:880px;max-width:98%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:20px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
     h1{margin:0 0 8px;font-size:20px}
     p.lead{margin:0 0 18px;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:380px 1fr;gap:20px}
+    .grid{display:grid;grid-template-columns:380px 320px;gap:20px}
 
     .card{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px}
     .drop{border:2px dashed rgba(255,255,255,0.06);padding:16px;border-radius:8px;text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer}
@@ -19,21 +19,22 @@
     input[type=file]{display:none}
     .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#ffffff;font-weight:600;text-decoration:none;cursor:pointer}
     .controls{display:flex;gap:8px;align-items:center;margin-top:10px}
-    canvas{width:100%;height:auto;border-radius:12px;background:transparent}
-    .preview-wrap{display:flex;flex-direction:column;gap:10px}
+    canvas{width:100%;height:auto;border-radius:12px;background:transparent;max-width:260px;margin:0 auto} /* ✅ smaller preview canvas */
+    .preview-wrap{display:flex;flex-direction:column;gap:10px;align-items:center}
     .row{display:flex;gap:8px;align-items:center}
-
-    /* ✅ Fixed text colors */
-    .small {
-      font-size: 13px;
-      color: #ffffff;   /* Makes 'Preview' and 'Output size:' white */
-    }
-    label.file-label span {
-      color: #ffffff;   /* Makes 'Upload photo' white */
-    }
-
+    .small{font-size:13px;color:#ffffff}
     .hint{font-size:12px;color:var(--muted)}
     label.file-label{cursor:pointer;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);display:inline-flex;align-items:center;gap:8px}
+    label.file-label span{color:#ffffff}
+    select#sizeSel {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    } /* ✅ red dropdown */
     .footer{font-size:13px;color:var(--muted);margin-top:14px}
     @media (max-width:900px){.grid{grid-template-columns:1fr} .container{padding:12px}}
   </style>
@@ -69,7 +70,7 @@
       </div>
 
       <div class="card preview-wrap">
-        <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+        <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;width:100%">
           <div class="small">Preview</div>
           <div style="display:flex;gap:8px">
             <button id="downloadBtn" class="btn" disabled>Download PNG</button>
@@ -93,7 +94,7 @@
     </div>
   </div>
 
-  <!-- JavaScript stays unchanged -->
+  <!-- JavaScript unchanged -->
   <script>
   const DEFAULT_FRAME_DATAURL = '';
 
