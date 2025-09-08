@@ -1,10 +1,3 @@
-<!--
-photo-frame-overlay.html (circle-forced)
-
-Additional change:
-- Added line: “For best results, upload a square image” in the description under the title.
--->
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -24,13 +17,21 @@ Additional change:
     .drop{border:2px dashed rgba(255,255,255,0.06);padding:16px;border-radius:8px;text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer}
     .muted{color:var(--muted);font-size:13px}
     input[type=file]{display:none}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#042028;font-weight:600;text-decoration:none;cursor:pointer}
     .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#ffffff;font-weight:600;text-decoration:none;cursor:pointer}
     .controls{display:flex;gap:8px;align-items:center;margin-top:10px}
     canvas{width:100%;height:auto;border-radius:12px;background:transparent}
     .preview-wrap{display:flex;flex-direction:column;gap:10px}
     .row{display:flex;gap:8px;align-items:center}
-    .small{font-size:13px}
+
+    /* ✅ Fixed text colors */
+    .small {
+      font-size: 13px;
+      color: #ffffff;   /* Makes 'Preview' and 'Output size:' white */
+    }
+    label.file-label span {
+      color: #ffffff;   /* Makes 'Upload photo' white */
+    }
+
     .hint{font-size:12px;color:var(--muted)}
     label.file-label{cursor:pointer;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);display:inline-flex;align-items:center;gap:8px}
     .footer{font-size:13px;color:var(--muted);margin-top:14px}
@@ -41,20 +42,20 @@ Additional change:
   <div class="container">
     <h1>Frame Overlay — Upload photo & download round transparent PNG</h1>
     <img src="logo.svg" alt="Logo" style="display:block; margin-bottom:15px; max-height:90px;" />
-<p class="lead">
-  Upload your photo and we'll auto-apply the transparent PNG frame. 
-  Result: a <strong>round PNG with transparent corners</strong>. 
-  <br>For best results, upload a square image. 
-</p>
+    <p class="lead">
+      Upload your photo and we'll auto-apply the transparent PNG frame. 
+      Result: a <strong>round PNG with transparent corners</strong>. 
+      <br>For best results, upload a square image. 
+    </p>
     
     <div class="grid">
       <div class="card">
         <div class="drop" id="dropZone">
-         <div id="dropInner">
-  <img src="camera.svg" alt="Upload icon" style="width:48px;height:48px;opacity:0.9" />
-  <div class="muted" style="margin-top:8px">Drag & Drop or click to upload a profile photo</div>
-  <div class="hint" style="margin-top:8px">We accept JPG / PNG. Square or portrait works best.</div>
-</div>
+          <div id="dropInner">
+            <img src="camera.svg" alt="Upload icon" style="width:48px;height:48px;opacity:0.9" />
+            <div class="muted" style="margin-top:8px">Drag & Drop or click to upload a profile photo</div>
+            <div class="hint" style="margin-top:8px">We accept JPG / PNG. Square or portrait works best.</div>
+          </div>
         </div>
 
         <div style="margin-top:12px" class="row">
@@ -94,7 +95,6 @@ Additional change:
 
   <!-- JavaScript stays unchanged -->
   <script>
-  // CONFIG: if you want to embed a data URL frame, place it here. Otherwise keep empty and use frame-default.png.
   const DEFAULT_FRAME_DATAURL = '';
 
   const SAMPLE_RING_SVG = encodeSVG(`
