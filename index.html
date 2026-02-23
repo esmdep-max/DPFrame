@@ -1,88 +1,284 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Frame Overlay — Upload photo & download round transparent PNG</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#ed1b36;--muted:#94a3b8}
-    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
-    body{background:#000;color:#000;display:flex;align-items:center;justify-content:center;padding:28px}
-    .container{width:880px;max-width:98%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:20px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-    h1{margin:0 0 8px;font-size:20px;color:#ffffff}
-    p.lead{margin:0 0 18px;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:380px 320px;gap:20px}
-    .card{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px}
-    .drop{border:2px dashed rgba(255,255,255,0.06);padding:16px;border-radius:8px;text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer}
-    .muted{color:var(--muted);font-size:13px}
-    input[type=file]{display:none}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#ffffff;font-weight:600;text-decoration:none;cursor:pointer}
-    .controls{display:flex;gap:8px;align-items:center;margin-top:10px}
-    canvas{width:100%;height:auto;border-radius:12px;background:transparent}
-    .preview-wrap{display:flex;flex-direction:column;gap:10px;max-width:100%}
-    .row{display:flex;gap:8px;align-items:center}
-    .small{font-size:13px;color:#ffffff}
-    label.file-label span{color:#ffffff}
-    .hint{font-size:12px;color:var(--muted)}
-    label.file-label{cursor:pointer;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);display:inline-flex;align-items:center;gap:8px}
-    .logo{display:block;margin-bottom:15px;max-width:100%;height:auto;max-height:80px}
-    @media (max-width:900px){
-      .grid{grid-template-columns:1fr}
-      .container{padding:12px}
-      .preview-wrap{margin-top:20px}
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Frame Overlay — Upload photo & download round transparent PNG</title>
+<link rel="icon" type="image/png" href="favicon.png">
+
+<style>
+:root{--bg:#0f1724;--card:#0b1220;--accent:#ed1b36;--muted:#94a3b8}
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+body{
+  background:#000;
+  color:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+}
+
+.container{
+  width:880px;
+  max-width:98%;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:12px;
+  padding:20px;
+  box-shadow:0 8px 30px rgba(2,6,23,0.6);
+}
+
+h1{margin:0 0 8px;font-size:20px;color:#ffffff}
+p.lead{margin:0 0 18px;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:380px 320px;gap:20px}
+
+.card{
+  background:rgba(255,255,255,0.02);
+  padding:14px;
+  border-radius:10px
+}
+
+.drop{
+  border:2px dashed rgba(255,255,255,0.06);
+  padding:16px;
+  border-radius:8px;
+  text-align:center;
+  min-height:200px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  cursor:pointer
+}
+
+.muted{color:var(--muted);font-size:13px}
+input[type=file]{display:none}
+
+.btn{
+  display:inline-block;
+  padding:8px 12px;
+  border-radius:8px;
+  background:var(--accent);
+  color:#ffffff;
+  font-weight:600;
+  text-decoration:none;
+  cursor:pointer
+}
+
+canvas{
+  width:100%;
+  height:auto;
+  border-radius:12px;
+  background:transparent
+}
+
+.preview-wrap{display:flex;flex-direction:column;gap:10px;max-width:100%}
+.row{display:flex;gap:8px;align-items:center}
+.small{font-size:13px;color:#ffffff}
+.hint{font-size:12px;color:var(--muted)}
+
+label.file-label{
+  cursor:pointer;
+  padding:8px 10px;
+  border-radius:8px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.03);
+  display:inline-flex;
+  align-items:center;
+  gap:8px
+}
+
+.logo{
+  display:block;
+  margin-bottom:15px;
+  max-width:100%;
+  height:auto;
+  max-height:80px
+}
+
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .container{padding:12px}
+  .preview-wrap{margin-top:20px}
+}
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Frame Overlay — Upload photo & download round transparent PNG</h1>
-    <img src="logo.svg" alt="Logo" class="logo" />
-    <p class="lead">
-      Upload your photo and we'll auto-apply the transparent PNG frame. 
-      Result: a <strong>round PNG with transparent corners</strong>. 
-      <br>For best results, upload a square image. 
-    </p>
-    
-    <div class="grid">
-      <div class="card">
-        <div class="drop" id="dropZone">
-          <div id="dropInner">
-            <img src="camera.svg" alt="Upload icon" style="width:48px;height:48px;opacity:0.9" />
-            <div class="muted" style="margin-top:8px">Drag & Drop or click to upload a profile photo</div>
-            <div class="hint" style="margin-top:8px">We accept JPG / PNG. Square or portrait works best.</div>
-          </div>
-        </div>
-        <div style="margin-top:12px" class="row">
-          <label class="file-label" title="Upload profile photo">
-            <input id="photoInput" type="file" accept="image/*" />
-            <span>Upload photo</span>
-          </label>
-        </div>
-        <div class="hint" style="margin-top:10px">Your uploaded photo will automatically use the fixed frame; the final PNG will be circular.</div>
-      </div>
+<div class="container">
 
-      <div class="card preview-wrap">
-        <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
-          <div class="small">Preview</div>
-          <div style="display:flex;gap:8px">
-            <button id="downloadBtn" class="btn" disabled>Download PNG</button>
-          </div>
-        </div>
-        <canvas id="canvas"></canvas>
-        <div class="row">
-          <div class="small">Output size:</div>
-          <select id="sizeSel" class="small">
-            <option value="400">400 × 400</option>
-            <option value="800">800 × 800</option>
-            <option value="1200">1200 × 1200</option>
-            <option value="2000">2000 × 2000</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
+<h1>Frame Overlay — Upload photo & download round transparent PNG</h1>
+<img src="logo.svg" alt="Logo" class="logo" />
 
-  <script src="script.js"></script>
+<p class="lead">
+Upload your photo and we'll auto-apply the transparent PNG frame.
+Result: a <strong>round PNG with transparent corners</strong>.
+<br>For best results, upload a square image.
+</p>
+
+<div class="grid">
+
+<div class="card">
+<div class="drop" id="dropZone">
+<div id="dropInner">
+<img src="camera.svg" style="width:48px;height:48px;opacity:0.9">
+<div class="muted" style="margin-top:8px">Drag & Drop or click to upload a profile photo</div>
+<div class="hint" style="margin-top:8px">We accept JPG / PNG. Square or portrait works best.</div>
+</div>
+</div>
+
+<div style="margin-top:12px" class="row">
+<label class="file-label">
+<input id="photoInput" type="file" accept="image/*" />
+<span>Upload photo</span>
+</label>
+</div>
+
+<div class="hint" style="margin-top:10px">
+Your uploaded photo will automatically use the fixed frame; the final PNG will be circular.
+</div>
+</div>
+
+<div class="card preview-wrap">
+<div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+<div class="small">Preview</div>
+<button id="downloadBtn" class="btn" disabled>Download PNG</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<div class="row">
+<div class="small">Output size:</div>
+<select id="sizeSel" class="small">
+<option value="400">400 × 400</option>
+<option value="800">800 × 800</option>
+<option value="1200">1200 × 1200</option>
+<option value="2000">2000 × 2000</option>
+</select>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+const drop = document.getElementById('dropZone');
+const photoInput = document.getElementById('photoInput');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const downloadBtn = document.getElementById('downloadBtn');
+const sizeSel = document.getElementById('sizeSel');
+
+let userImage = null;
+let frameImage = new Image();
+let currentSize = window.innerWidth < 900 ? 400 : 800;
+sizeSel.value = currentSize;
+
+function updateDownloadLabel(){
+  downloadBtn.textContent = `Download ${currentSize}×${currentSize} PNG`;
+}
+
+frameImage.src='frame-default.png';
+frameImage.onload=()=>render();
+
+function readFileAsDataURL(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result);
+    r.onerror=rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function loadImageFromDataURL(dataUrl){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>res(img);
+    img.onerror=rej;
+    img.src=dataUrl;
+  });
+}
+
+async function handlePhotoFile(file){
+  try{
+    const data=await readFileAsDataURL(file);
+    userImage=await loadImageFromDataURL(data);
+    render();
+  }catch{
+    alert('Failed to load image');
+  }
+}
+
+drop.onclick=()=>photoInput.click();
+drop.ondrop=e=>{
+  e.preventDefault();
+  const f=e.dataTransfer.files[0];
+  if(f) handlePhotoFile(f);
+};
+drop.ondragover=e=>e.preventDefault();
+
+photoInput.onchange=e=>{
+  const f=e.target.files[0];
+  if(f) handlePhotoFile(f);
+};
+
+function setCanvasSize(px){
+  canvas.width=px;
+  canvas.height=px;
+  currentSize=px;
+  updateDownloadLabel();
+}
+
+sizeSel.onchange=()=>{
+  setCanvasSize(parseInt(sizeSel.value));
+  render();
+};
+
+function render(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if(!userImage){
+    downloadBtn.disabled=true;
+    return;
+  }
+
+  const scale=Math.max(canvas.width/userImage.width,canvas.height/userImage.height);
+  const sw=canvas.width/scale;
+  const sh=canvas.height/scale;
+  const sx=(userImage.width-sw)/2;
+  const sy=(userImage.height-sh)/2;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(canvas.width/2,canvas.height/2,canvas.width/2,0,Math.PI*2);
+  ctx.clip();
+
+  ctx.drawImage(userImage,sx,sy,sw,sh,0,0,canvas.width,canvas.height);
+  ctx.drawImage(frameImage,0,0,canvas.width,canvas.height);
+  ctx.restore();
+
+  downloadBtn.disabled=false;
+}
+
+downloadBtn.onclick=()=>{
+  const filename=`profile-${currentSize}.png`;
+  canvas.toBlob(blob=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=filename;
+    a.click();
+  },'image/png');
+};
+
+setCanvasSize(currentSize);
+updateDownloadLabel();
+</script>
+
 </body>
 </html>
